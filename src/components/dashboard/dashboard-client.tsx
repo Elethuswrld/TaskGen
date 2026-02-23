@@ -15,7 +15,6 @@ interface DashboardClientProps {
 }
 
 export function DashboardClient({ initialTasks, userId }: DashboardClientProps) {
-  const [tasks, setTasks] = useState(initialTasks);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [statusFilter, setStatusFilter] = useState('all');
@@ -29,8 +28,10 @@ export function DashboardClient({ initialTasks, userId }: DashboardClientProps) 
     setEditingTask(null);
     setIsFormOpen(true);
   };
-
-  const filteredTasks = tasks.filter(task => 
+  
+  // By using the initialTasks prop directly, the component will re-render
+  // with new tasks when the page is revalidated by a server action.
+  const filteredTasks = initialTasks.filter(task => 
     statusFilter === 'all' || task.status === statusFilter
   );
 

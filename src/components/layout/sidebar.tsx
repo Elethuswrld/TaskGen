@@ -17,12 +17,18 @@ import { signOutClient } from '@/lib/auth-client';
 import { Button } from '../ui/button';
 import { LogOut, User as UserIcon, LayoutDashboard, Cog, Shield } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export function AppSidebar() {
   const { user, role } = useAuth();
   const pathname = usePathname();
+  const router = useRouter();
   const defaultAvatar = PlaceHolderImages.find(p => p.id === 'default-avatar');
+
+  const handleSignOut = async () => {
+    await signOutClient();
+    router.push('/login');
+  };
 
   return (
     <>
@@ -84,7 +90,7 @@ export function AppSidebar() {
             <p className="truncate text-sm font-medium">{user?.displayName}</p>
             <p className="truncate text-xs text-muted-foreground">{user?.email}</p>
           </div>
-          <Button variant="ghost" size="icon" onClick={() => signOutClient()} aria-label="Log out">
+          <Button variant="ghost" size="icon" onClick={handleSignOut} aria-label="Log out">
             <LogOut size={16} />
           </Button>
         </div>
