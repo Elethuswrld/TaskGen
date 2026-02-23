@@ -8,3 +8,4 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 export { app, auth, db };
+console.log("Firebase Config:", firebaseConfig);

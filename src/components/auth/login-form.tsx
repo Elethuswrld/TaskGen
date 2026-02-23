@@ -21,7 +21,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { signInWithEmail } from '@/lib/actions';
+import { signInWithEmailClient } from '@/lib/auth-client';
 import Link from 'next/link';
 import { Logo } from '@/components/icons/logo';
 import { useState } from 'react';
@@ -45,7 +45,7 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    const result = await signInWithEmail(values);
+    const result = await signInWithEmailClient(values.email, values.password);
     setIsLoading(false);
     if (result.error) {
       toast({

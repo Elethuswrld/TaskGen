@@ -21,7 +21,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { signUpWithEmail } from '@/lib/actions';
+import { signUpWithEmailClient } from '@/lib/auth-client';
 import Link from 'next/link';
 import { Logo } from '@/components/icons/logo';
 import { useState } from 'react';
@@ -47,7 +47,7 @@ export function SignupForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    const result = await signUpWithEmail(values);
+    const result = await signUpWithEmailClient(values.displayName, values.email, values.password);
     setIsLoading(false);
     if (result.error) {
       toast({

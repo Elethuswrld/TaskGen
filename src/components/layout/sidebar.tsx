@@ -13,7 +13,7 @@ import { Logo } from '../icons/logo';
 import { useAuth } from '@/hooks/use-auth';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { signOut } from '@/lib/actions';
+import { signOutClient } from '@/lib/auth-client';
 import { Button } from '../ui/button';
 import { LogOut, User as UserIcon, LayoutDashboard, Cog } from 'lucide-react';
 import Link from 'next/link';
@@ -71,7 +71,7 @@ export function AppSidebar() {
             <p className="truncate text-sm font-medium">{user?.displayName}</p>
             <p className="truncate text-xs text-muted-foreground">{user?.email}</p>
           </div>
-          <Button variant="ghost" size="icon" onClick={() => signOut()} aria-label="Log out">
+          <Button variant="ghost" size="icon" onClick={() => signOutClient()} aria-label="Log out">
             <LogOut size={16} />
           </Button>
         </div>

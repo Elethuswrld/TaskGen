@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { updateUserProfile } from '@/lib/actions';
+import { updateUserProfileClient } from '@/lib/auth-client';
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import type { User } from 'firebase/auth';
@@ -44,7 +44,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    const result = await updateUserProfile(user.uid, values);
+    const result = await updateUserProfileClient(values.displayName);
     setIsLoading(false);
 
     if (result.error) {
