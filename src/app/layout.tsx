@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/hooks/use-auth';
-import AuthGuard from '@/components/auth/auth-guard';
 
 export const metadata: Metadata = {
   title: 'TaskDash',
@@ -26,7 +25,7 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <AuthProvider>
-          <AuthGuard>{children}</AuthGuard>
+          {children}
         </AuthProvider>
         <Toaster />
       </body>
