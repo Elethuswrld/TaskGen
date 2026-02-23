@@ -8,10 +8,13 @@ import {
 } from 'firebase/auth';
 import { auth, db } from './firebase/client';
 import { doc, setDoc, updateDoc } from 'firebase/firestore';
+import { setCookie, deleteCookie } from 'cookies-next';
 
 export async function signInWithEmailClient(email: string, password: string) {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const token = await userCredential.user.getIdToken();
+    setCookie('firebase-auth', token, { path: '/' });
     return { user: userCredential.user };
   } catch (error: any) {
     return { error: 'Invalid email or password.' };
@@ -38,6 +41,9 @@ export async function signUpWithEmailClient(displayName: string, email: string, 
             displayName,
             email,
         });
+        
+        const token = await user.getIdToken();
+        setCookie('firebase-auth', token, { path: '/' });
 
         return { user };
     } catch (error: any) {
@@ -51,6 +57,7 @@ export async function signUpWithEmailClient(displayName: string, email: string, 
 export async function signOutClient() {
   try {
     await firebaseSignOut(auth);
+    deleteCookie('firebase-auth', { path: '/' });
     return { success: true };
   } catch (error: any) {
     return { error: error.message };
@@ -74,6 +81,10 @@ export async function updateUserProfileClient(displayName: string) {
         await updateDoc(userDocRef, {
             displayName
         });
+        
+        // Refresh token and update cookie
+        const token = await user.getIdToken(true);
+        setCookie('firebase-auth', token, { path: '/' });
         
         return { success: true, message: "Profile updated successfully!" };
 
