@@ -15,12 +15,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { signOutClient } from '@/lib/auth-client';
 import { Button } from '../ui/button';
-import { LogOut, User as UserIcon, LayoutDashboard, Cog } from 'lucide-react';
+import { LogOut, User as UserIcon, LayoutDashboard, Cog, Shield } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 export function AppSidebar() {
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   const pathname = usePathname();
   const defaultAvatar = PlaceHolderImages.find(p => p.id === 'default-avatar');
 
@@ -45,6 +45,19 @@ export function AppSidebar() {
               </SidebarMenuButton>
             </Link>
           </SidebarMenuItem>
+          {role === 'admin' && (
+            <SidebarMenuItem>
+              <Link href="/admin" passHref legacyBehavior>
+                <SidebarMenuButton
+                  isActive={pathname.startsWith('/admin')}
+                  icon={<Shield />}
+                  tooltip="Admin"
+                >
+                  Admin
+                </SidebarMenuButton>
+              </Link>
+            </SidebarMenuItem>
+          )}
           <SidebarMenuItem>
             <Link href="/profile" passHref legacyBehavior>
                 <SidebarMenuButton 
