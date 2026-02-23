@@ -1,9 +1,10 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth';
+import { onIdTokenChanged, User } from 'firebase/auth';
 import { auth } from '@/lib/firebase/client';
 import type { UserProfile } from '@/lib/types';
+import { setCookie, deleteCookie } from 'cookies-next';
 
 interface AuthContextType {
   user: UserProfile | null;
@@ -20,11 +21,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser: User | null) => {
+    const unsubscribe = onIdTokenChanged(auth, async (firebaseUser: User | null) => {
       if (firebaseUser) {
+        const token = await firebaseUser.getIdToken();
+        setCookie('firebase-auth', token, { path: '/' });
         const { uid, email, displayName, photoURL } = firebaseUser;
         setUser({ uid, email, displayName, photoURL });
       } else {
+        deleteCookie('firebase-auth', { path: '/' });
         setUser(null);
       }
       setLoading(false);

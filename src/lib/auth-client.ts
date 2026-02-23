@@ -8,7 +8,7 @@ import {
 } from 'firebase/auth';
 import { auth, db } from './firebase/client';
 import { doc, setDoc, updateDoc } from 'firebase/firestore';
-import { setCookie, deleteCookie } from 'cookies-next';
+import { setCookie } from 'cookies-next';
 
 export async function signInWithEmailClient(email: string, password: string) {
   try {
@@ -57,7 +57,7 @@ export async function signUpWithEmailClient(displayName: string, email: string, 
 export async function signOutClient() {
   try {
     await firebaseSignOut(auth);
-    deleteCookie('firebase-auth', { path: '/' });
+    // The onIdTokenChanged listener in useAuth will handle cookie deletion
     return { success: true };
   } catch (error: any) {
     return { error: error.message };
@@ -82,9 +82,8 @@ export async function updateUserProfileClient(displayName: string) {
             displayName
         });
         
-        // Refresh token and update cookie
-        const token = await user.getIdToken(true);
-        setCookie('firebase-auth', token, { path: '/' });
+        // Force refresh the token. The onIdTokenChanged listener in useAuth will handle updating the cookie.
+        await user.getIdToken(true);
         
         return { success: true, message: "Profile updated successfully!" };
 
