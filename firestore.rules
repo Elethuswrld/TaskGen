@@ -1,0 +1,21 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Users can only read and write their own tasks.
+    match /tasks/{taskId} {
+      allow read, write: if request.auth.uid == resource.data.userId;
+    }
+
+    // Users can only read and write their own profile data.
+    match /users/{userId} {
+      allow read, write: if request.auth.uid == userId;
+    }
+
+    // Example: A collection that only admins can read and write to.
+    match /adminData/{docId} {
+      allow read, write: if request.auth.token.role == 'admin';
+    }
+  }
+}
